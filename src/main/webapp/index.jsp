@@ -1,6 +1,4 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
-<%@ page import="ru.job4j.dream.store.MemStore" %>
-<%@ page import="ru.job4j.dream.model.Post" %>
 <!doctype html>
 <html lang="en">
 <head>
@@ -36,7 +34,7 @@
             <li class="nav-item">
                 <a class="nav-link" href="<%=request.getContextPath()%>/candidate/candidates.do">Кандидаты</a>
             </li>
-            <li class="nav-item">
+            <li clasfs="nav-item">
                 <a class="nav-link" href="<%=request.getContextPath()%>/candidate/edit_candidate.jsp">Добавить кандидата</a>
             </li>
         </ul>

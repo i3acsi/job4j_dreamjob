@@ -127,7 +127,8 @@ public class PsqlStore implements Store {
         ) {
             ps.setInt(1, id);
             try (ResultSet it = ps.executeQuery()) {
-                result = new Post(id, it.getString("name"));
+                if(it.next())
+                    result = new Post(id, it.getString("name"));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -181,7 +182,8 @@ public class PsqlStore implements Store {
         ) {
             ps.setInt(1, id);
             try (ResultSet it = ps.executeQuery()) {
-                result = new Candidate(id, it.getString("name"));
+                if(it.next())
+                    result = new Candidate(id, it.getString("name"));
             }
         } catch (Exception e) {
             e.printStackTrace();

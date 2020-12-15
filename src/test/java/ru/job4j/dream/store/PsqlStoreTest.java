@@ -28,6 +28,7 @@ class PsqlStoreTest {
                 .orElse(null);
         Assert.assertEquals(resultPost.getName(), newName);
         Assert.assertEquals(resultPost.getId(), id);
+        Assert.assertEquals(resultPost, store.findPostById(id));
     }
 
     public void saveAndUpdateCandidateTest() {
@@ -47,6 +48,7 @@ class PsqlStoreTest {
                 .orElse(null);
         Assert.assertEquals(resultCandidate.getName(), newName);
         Assert.assertEquals(resultCandidate.getId(), id);
+        Assert.assertEquals(resultCandidate, store.findCandidateById(id));
     }
 
     public static void main(String[] args) {
