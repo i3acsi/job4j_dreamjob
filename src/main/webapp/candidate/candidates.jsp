@@ -39,17 +39,26 @@
                 <table class="table">
                     <thead>
                     <tr>
-                        <th scope="col">Названия</th>
+                        <th scope="col">Имя</th>
+                        <th scope="col">Фото</th>
                     </tr>
                     </thead>
                     <tbody>
                     <c:forEach items="${candidates}" var="candidate">
                         <tr>
                             <td>
-                                <a href='<c:url value="/candidate/edit_candidate.jsp?id=${candidate.id}"/>'>
-                                    <i class="fa fa-edit mr-3"></i>
-                                </a>
                                 <c:out value="${candidate.name}"/>
+                                <br><a href='<c:url value="/candidate/edit_candidate.jsp?id=${candidate.id}"/>'>
+                                <i class="fa fa-edit mr-3"></i></a>
+                                <br><a href='<c:url value="/candidate/candidates.do?id=${candidate.id}&action=remove"/>'>
+                                <i class="fa fa-remove mr-3"></i></a>
+                            </td>
+                            <td>
+                                <a href="<c:url value='/upload?id=${candidate.id}'/>">
+                                    <i class="fa fa-edit mr-3">Загрузить фото</i></a>
+                                <p></p><img src="<c:url value='/download?name=${candidate.id}'/>" width="100px"
+                                            height="100px"/>
+                                <p></p><a href="<c:url value='/download?name=${candidate.id}'/>">Скачать</a>
                             </td>
                         </tr>
                     </c:forEach>
