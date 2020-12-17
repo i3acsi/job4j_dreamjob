@@ -48,6 +48,9 @@
         <li class="nav-item">
             <a class="nav-link" href="<c:url value='/auth.do'/>"> <c:out value="<%=value%>"/></a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link" href="<%=request.getContextPath()%>/reg.do">Зарегистрировать</a>
+        </li>
     </ul>
 </div>
 </body>

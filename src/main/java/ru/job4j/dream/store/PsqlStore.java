@@ -271,6 +271,9 @@ public class PsqlStore implements Store {
             String email = user.getEmail();
             if (email == null || email.isEmpty())
                 throw new RuntimeException("empty email");
+            User u = PsqlStore.instOf().findUserByEmail(email);
+            if (u!=null)
+                throw new RuntimeException("user with this email already exists");
             String password = user.getPassword();
             if (password == null || password.isEmpty())
                 throw new RuntimeException("empty password");

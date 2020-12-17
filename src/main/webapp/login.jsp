@@ -30,6 +30,11 @@
                 Авторизация
             </div>
             <div class="card-body">
+                <% if (request.getAttribute("error") != null) { %>
+                <div class="alert alert-danger">
+                    <%=request.getAttribute("error")%>
+                </div>
+                <% }; %>
                 <form action="<%=request.getContextPath()%>/auth.do" method="post">
                     <div class="form-group">
                         <label>Почта</label>

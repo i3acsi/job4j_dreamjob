@@ -1,4 +1,3 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html; charset=UTF-8" %>
 <!doctype html>
 <html lang="en">
@@ -23,25 +22,32 @@
     <title>Работа мечты</title>
 </head>
 <body>
-<jsp:include page="nav.jsp"/>
-<div class="row">
-    <div class="card" style="width: 100%">
-        <div class="card-header">
-            Сегодняшние вакансии.
-        </div>
-        <div class="card-body">
+<div class="container pt-3">
+
+    <div class="row">
+        <div class="card" style="width: 100%">
+            <div class="card-header">
+                Регистрация
+            </div>
+            <div class="card-body">
+                <form action="<%=request.getContextPath()%>/reg.do" method="post">
+                    <div class="form-group">
+                        <label>Имя</label>
+                        <input type="text" class="form-control" name="name">
+                    </div>
+                    <div class="form-group">
+                        <label>Почта</label>
+                        <input type="text" class="form-control" name="email">
+                    </div>
+                    <div class="form-group">
+                        <label>Пароль</label>
+                        <input type="password" class="form-control" name="password">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Зарегистрировать</button>
+                </form>
+            </div>
         </div>
     </div>
-</div>
-<div class="row pt-3">
-    <div class="card" style="width: 100%">
-        <div class="card-header">
-            Сегодняшние кандидаты.
-        </div>
-        <div class="card-body">
-        </div>
-    </div>
-</div>
 </div>
 </body>
 </html>
