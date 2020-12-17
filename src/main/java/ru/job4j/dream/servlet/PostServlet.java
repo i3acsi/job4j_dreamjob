@@ -18,6 +18,7 @@ public class PostServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setAttribute("user", req.getSession().getAttribute("user"));
         req.setCharacterEncoding("UTF-8");
         PsqlStore.instOf().save(
                 new Post(

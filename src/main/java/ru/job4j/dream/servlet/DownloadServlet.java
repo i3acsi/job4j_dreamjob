@@ -11,6 +11,7 @@ import java.io.IOException;
 public class DownloadServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setAttribute("user", req.getSession().getAttribute("user"));
         String name = req.getParameter("name");
         resp.setContentType("name=" + name);
         resp.setContentType("image/png");

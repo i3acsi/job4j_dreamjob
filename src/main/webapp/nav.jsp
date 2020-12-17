@@ -1,6 +1,6 @@
+<%@ page import="ru.job4j.dream.model.User" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html; charset=UTF-8" %>
-<%@ page import="ru.job4j.dream.store.PsqlStore" %>
-<%@ page import="ru.job4j.dream.model.Post" %>
 <!doctype html>
 <html lang="en">
 <head>
@@ -24,35 +24,31 @@
     <title>Работа мечты</title>
 </head>
 <body>
-<%
-    String id = request.getParameter("id");
-    Post post = new Post(0, "");
-    if (id != null) {
-        post = PsqlStore.instOf().findPostById(Integer.valueOf(id));
+    <%
+    User user= (User)request.getSession().getAttribute("user");
+    String value = "Войти";
+    if (user != null) {
+        value = user.getName() + " | Выйти";
     }
 %>
-<jsp:include page="/nav.jsp"/>
-<div class="container pt-3">
-    <div class="row">
-        <div class="card" style="width: 100%">
-            <div class="card-header">
-                <% if (id == null) { %>
-                Новая вакансия.
-                <% } else { %>
-                Редактирование вакансии.
-                <% } %>
-            </div>
-            <div class="card-body">
-                <form action="<%=request.getContextPath()%>/post/posts.do?id=<%=post.getId()%>" method="post">
-                    <div class="form-group">
-                        <label>Имя</label>
-                        <input type="text" class="form-control" name="name" value="<%=post.getName()%>">
-                    </div>
-                    <button type="submit" class="btn btn-primary">Сохранить</button>
-                </form>
-            </div>
-        </div>
-    </div>
+<div class="row">
+    <ul class="nav">
+        <li class="nav-item">
+            <a class="nav-link" href="<%=request.getContextPath()%>/post/posts.do">Вакансии</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="<%=request.getContextPath()%>/candidate/candidates.do">Кандидаты</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="<%=request.getContextPath()%>/post/edit_post.jsp">Добавить вакансию</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="<%=request.getContextPath()%>/candidate/edit_candidate.jsp">Добавить кандидата</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="<c:url value='/auth.do'/>"> <c:out value="<%=value%>"/></a>
+        </li>
+    </ul>
 </div>
 </body>
 </html>

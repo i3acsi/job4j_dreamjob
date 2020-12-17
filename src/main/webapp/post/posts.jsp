@@ -25,14 +25,12 @@
     <title>Работа мечты</title>
 </head>
 <body>
+<jsp:include page="/nav.jsp"/>
 <div class="container pt-3">
     <div class="row">
         <div class="card" style="width: 100%">
             <div class="card-header">
                 Вакансии
-            </div>
-            <div>
-                <a href="<%=request.getContextPath()%>" class="btn btn-info" role="button">Начальная страница</a>
             </div>
             <div class="card-body">
                 <table class="table">
@@ -45,7 +43,7 @@
                     <c:forEach items="${posts}" var="post">
                         <tr>
                             <td>
-                                <a href='<c:url value="/post/edit_post.jsp?id=${post.id}"/>'>
+                                <a href='<c:url value="/post/edit_post.jsp?id=${post.id},user=${user}"/>'>
                                     <i class="fa fa-edit mr-3"></i>
                                 </a>
                                 <c:out value="${post.name}"/>

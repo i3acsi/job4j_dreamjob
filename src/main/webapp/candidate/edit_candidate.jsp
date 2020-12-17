@@ -31,6 +31,7 @@
         candidate = PsqlStore.instOf().findCandidateById(Integer.valueOf(id));
     }
 %>
+<jsp:include page="/nav.jsp"/>
 <div class="container pt-3">
     <div class="row">
         <div class="card" style="width: 100%">
@@ -40,9 +41,6 @@
                 <% } else { %>
                 Редактирование кандидата.
                 <% } %>
-            </div>
-            <div>
-                <a href="<%=request.getContextPath()%>" class="btn btn-info" role="button">Начальная страница</a>
             </div>
             <div class="card-body">
                 <form action="<%=request.getContextPath()%>/candidate/candidates.do?id=<%=candidate.getId()%>"

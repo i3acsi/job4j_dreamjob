@@ -4,6 +4,7 @@ import org.apache.commons.dbcp2.BasicDataSource;
 import ru.job4j.dream.logger.MyLogger;
 import ru.job4j.dream.model.Candidate;
 import ru.job4j.dream.model.Post;
+import ru.job4j.dream.model.User;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -161,7 +162,8 @@ public class PsqlStore implements Store {
     }
 
     @Override
-    public void deletePost(int id) {
+    public void delete(Post post) {
+        int id = post.getId();
         try (Connection cn = pool.getConnection();
              PreparedStatement ps = cn.prepareStatement("DELETE FROM post WHERE id=?")) {
             ps.setInt(1, id);
@@ -236,13 +238,169 @@ public class PsqlStore implements Store {
     }
 
     @Override
-    public void deleteCandidate(int id) {
+    public void delete(Candidate candidate) {
+        int id = candidate.getId();
         try (Connection cn = pool.getConnection();
              PreparedStatement ps = cn.prepareStatement("DELETE FROM candidate WHERE id=?")) {
             ps.setInt(1, id);
             ps.executeUpdate();
             File file = new File("images" + File.separator + id);
             Files.deleteIfExists(file.toPath());
+        } catch (Exception e) {
+            MyLogger.logException(e.getMessage());
+        }
+    }
+
+    @Override
+    public void save(User user) {
+        if (user.getId() == 0) {
+            create(user);
+        } else {
+            update(user);
+        }
+    }
+
+    private User create(User user) {
+        try (Connection cn = pool.getConnection();
+             PreparedStatement ps = cn.prepareStatement("INSERT INTO user_account(name, email, password) VALUES (?,?,?)",
+                     PreparedStatement.RETURN_GENERATED_KEYS)
+        ) {
+            String name = user.getName();
+            if (name == null || name.isEmpty())
+                throw new RuntimeException("empty name");
+            String email = user.getEmail();
+            if (email == null || email.isEmpty())
+                throw new RuntimeException("empty email");
+            String password = user.getPassword();
+            if (password == null || password.isEmpty())
+                throw new RuntimeException("empty password");
+            ps.setString(1, name);
+            ps.setString(2, email);
+            ps.setString(3, password);
+            ps.execute();
+            try (ResultSet id = ps.getGeneratedKeys()) {
+                if (id.next()) {
+                    user.setId(id.getInt(1));
+                }
+            }
+        } catch (Exception e) {
+            MyLogger.logException(e.getMessage());
+        }
+        return user;
+    }
+
+    private void update(User user) {
+        try (Connection cn = pool.getConnection();
+             PreparedStatement ps = cn.prepareStatement("UPDATE user_account SET name = ?, email = ?, password = ? WHERE id = ?")
+        ) {
+            String name = user.getName();
+            if (name == null || name.isEmpty())
+                throw new RuntimeException("empty name");
+            String email = user.getEmail();
+            if (email == null || email.isEmpty())
+                throw new RuntimeException("empty email");
+            String password = user.getPassword();
+            if (password == null || password.isEmpty())
+                throw new RuntimeException("empty password");
+            ps.setString(1, name);
+            ps.setString(2, email);
+            ps.setString(3, password);
+            ps.setInt(4, user.getId());
+            ps.execute();
+        } catch (Exception e) {
+            MyLogger.logException(e.getMessage());
+        }
+    }
+
+    @Override
+    public Collection<User> findAllUsers() {
+        List<User> users = new ArrayList<>();
+        try (Connection cn = pool.getConnection();
+             PreparedStatement ps = cn.prepareStatement("SELECT * FROM user_account")
+        ) {
+            try (ResultSet it = ps.executeQuery()) {
+                while (it.next()) {
+                    int id = it.getInt("id");
+                    String name = it.getString("name");
+                    ;
+                    if (name == null || name.isEmpty())
+                        throw new RuntimeException("empty name");
+                    String email = it.getString("email");
+                    if (email == null || email.isEmpty())
+                        throw new RuntimeException("empty email");
+                    String password = it.getString("password");
+                    if (password == null || password.isEmpty())
+                        throw new RuntimeException("empty password");
+                    if (id >= 0)
+                        users.add(new User(id, name, email, password));
+                }
+            }
+        } catch (Exception e) {
+            MyLogger.logException(e.getMessage());
+        }
+        return users;
+    }
+
+    @Override
+    public User findUserById(int id) {
+        User result = null;
+        try (Connection cn = pool.getConnection();
+             PreparedStatement ps = cn.prepareStatement("SELECT name, email, password FROM user_account WHERE id = ?")
+        ) {
+            ps.setInt(1, id);
+            try (ResultSet it = ps.executeQuery()) {
+                if (it.next()) {
+                    String name = it.getString("name");
+                    if (name == null || name.isEmpty())
+                        throw new RuntimeException("empty name");
+                    String email = it.getString("email");
+                    if (email == null || email.isEmpty())
+                        throw new RuntimeException("empty email");
+                    String password = it.getString("password");
+                    if (password == null || password.isEmpty())
+                        throw new RuntimeException("empty password");
+
+                    result = new User(id, name, email, password);
+                }
+            }
+        } catch (Exception e) {
+            MyLogger.logException(e.getMessage());
+        }
+        return result;
+    }
+
+    @Override
+    public User findUserByEmail(String email) {
+        User result = null;
+        try (Connection cn = pool.getConnection();
+             PreparedStatement ps = cn.prepareStatement("SELECT id, name, password FROM user_account WHERE email = ?")
+        ) {
+            ps.setString(1, email);
+            try (ResultSet it = ps.executeQuery()) {
+                if (it.next()) {
+                    String name = it.getString("name");
+                    if (name == null || name.isEmpty())
+                        throw new RuntimeException("empty name");
+                    int id = it.getInt("id");
+                    String password = it.getString("password");
+                    if (password == null || password.isEmpty())
+                        throw new RuntimeException("empty password");
+                    result = new User(id, name, email, password);
+                }
+            }
+        } catch (Exception e) {
+            MyLogger.logException(e.getMessage());
+        }
+        return result;
+    }
+
+    @Override
+    public void delete(User user) {
+        int id = user.getId();
+        try (Connection cn = pool.getConnection();
+             PreparedStatement ps = cn.prepareStatement("DELETE FROM user_account WHERE id=?")) {
+            ps.setInt(1, id);
+            ps.executeUpdate();
         } catch (Exception e) {
             MyLogger.logException(e.getMessage());
         }

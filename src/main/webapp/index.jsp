@@ -1,3 +1,5 @@
+<%@ page import="ru.job4j.dream.model.User" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html; charset=UTF-8" %>
 <!doctype html>
 <html lang="en">
@@ -22,26 +24,7 @@
     <title>Работа мечты</title>
 </head>
 <body>
-<div class="container">
-    <div class="row">
-        <ul class="nav">
-            <li class="nav-item">
-                <a class="nav-link" href="<%=request.getContextPath()%>/post/posts.do">Вакансии</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="<%=request.getContextPath()%>/post/edit_post.jsp">Добавить вакансию</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="<%=request.getContextPath()%>/candidate/candidates.do">Кандидаты</a>
-            </li>
-            <li clasfs="nav-item">
-                <a class="nav-link" href="<%=request.getContextPath()%>/candidate/edit_candidate.jsp">Добавить кандидата</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="<%=request.getContextPath()%>/login.jsp">Войти</a>
-            </li>
-        </ul>
-    </div>
+<jsp:include page="nav.jsp"/>
     <div class="row">
         <div class="card" style="width: 100%">
             <div class="card-header">

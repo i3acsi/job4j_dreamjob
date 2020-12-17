@@ -13,7 +13,7 @@ public class CandidatesServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         if (req.getParameter("id") != null) {
-            PsqlStore.instOf().deleteCandidate(Integer.valueOf(req.getParameter("id")));
+            PsqlStore.instOf().delete(PsqlStore.instOf().findCandidateById(Integer.valueOf(req.getParameter("id"))));
         }
         req.setAttribute("candidates", PsqlStore.instOf().findAllCandidates());
         req.getRequestDispatcher("/candidate/candidates.jsp").forward(req, resp);
