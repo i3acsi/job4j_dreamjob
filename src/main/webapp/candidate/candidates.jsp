@@ -1,6 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core" %>
-<%@ page import="ru.job4j.dream.model.User" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <!doctype html>
 <html lang="en">
@@ -51,7 +50,7 @@
                                 <c:out value="${candidate.name}"/>
                                 <br><a href='<c:url value="/candidate/edit_candidate.jsp?id=${candidate.id}"/>'>
                                 <i class="fa fa-edit mr-3"></i></a>
-                                <br><a href='<c:url value="/candidate/candidates.do?id=${candidate.id}&action=remove"/>'>
+                                <br><a href='<c:url value="/candidates.do?id=${candidate.id}&action=remove"/>'>
                                 <i class="fa fa-remove mr-3"></i></a>
                             </td>
                             <td>

@@ -1,5 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
 
 <!doctype html>
 <html lang="en">
@@ -43,10 +44,13 @@
                     <c:forEach items="${posts}" var="post">
                         <tr>
                             <td>
-                                <a href='<c:url value="/post/edit_post.jsp?id=${post.id},user=${user}"/>'>
-                                    <i class="fa fa-edit mr-3"></i>
-                                </a>
                                 <c:out value="${post.name}"/>
+                                <br><a href='<c:url value="/post/edit_post.jsp?id=${post.id}"/>'>
+                                <i class="fa fa-edit mr-3"></i>
+                            </a>
+                                <br><a href='<c:url value="/posts.do?id=${post.id}&action=remove"/>'>
+                                <i class="fa fa-remove mr-3"></i>
+                            </a>
                             </td>
                         </tr>
                     </c:forEach>

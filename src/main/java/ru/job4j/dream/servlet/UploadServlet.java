@@ -56,6 +56,6 @@ public class UploadServlet extends HttpServlet {
         } catch (FileUploadException e) {
             MyLogger.logException(e.getMessage());
         }
-        resp.sendRedirect(req.getContextPath() + "/candidate/candidates.do");
+        resp.sendRedirect(req.getContextPath() + "/candidates.do");
     }
 }

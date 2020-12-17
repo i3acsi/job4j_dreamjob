@@ -34,10 +34,10 @@
 <div class="row">
     <ul class="nav">
         <li class="nav-item">
-            <a class="nav-link" href="<%=request.getContextPath()%>/post/posts.do">Вакансии</a>
+            <a class="nav-link" href="<%=request.getContextPath()%>/posts.do">Вакансии</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="<%=request.getContextPath()%>/candidate/candidates.do">Кандидаты</a>
+            <a class="nav-link" href="<%=request.getContextPath()%>/candidates.do">Кандидаты</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" href="<%=request.getContextPath()%>/post/edit_post.jsp">Добавить вакансию</a>

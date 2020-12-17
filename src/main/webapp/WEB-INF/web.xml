@@ -2,55 +2,66 @@
         "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
         "http://java.sun.com/dtd/web-app_2_3.dtd" >
 
-<web-app>
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+         version="2.5"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+
     <display-name>Archetype Created Web Application</display-name>
-    <servlet>
-        <servlet-name>AuthServlet</servlet-name>
-        <servlet-class>ru.job4j.dream.servlet.AuthServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>IndexServlet</servlet-name>
-        <servlet-class>ru.job4j.dream.servlet.IndexServlet</servlet-class>
-    </servlet>
     <servlet>
         <servlet-name>PostServlet</servlet-name>
         <servlet-class>ru.job4j.dream.servlet.PostServlet</servlet-class>
     </servlet>
+    <servlet-mapping>
+        <servlet-name>PostServlet</servlet-name>
+        <url-pattern>/posts.do</url-pattern>
+    </servlet-mapping>
     <servlet>
         <servlet-name>CandidatesServlet</servlet-name>
         <servlet-class>ru.job4j.dream.servlet.CandidatesServlet</servlet-class>
     </servlet>
+    <servlet-mapping>
+        <servlet-name>CandidatesServlet</servlet-name>
+        <url-pattern>/candidates.do</url-pattern>
+    </servlet-mapping>
     <servlet>
         <servlet-name>UploadServlet</servlet-name>
         <servlet-class>ru.job4j.dream.servlet.UploadServlet</servlet-class>
     </servlet>
-    <servlet>
-        <servlet-name>DownloadServlet</servlet-name>
-        <servlet-class>ru.job4j.dream.servlet.DownloadServlet</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>AuthServlet</servlet-name>
-        <url-pattern>/auth.do</url-pattern>
-    </servlet-mapping>
     <servlet-mapping>
         <servlet-name>UploadServlet</servlet-name>
         <url-pattern>/upload</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>DownloadServlet</servlet-name>
+        <servlet-class>ru.job4j.dream.servlet.DownloadServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>DownloadServlet</servlet-name>
         <url-pattern>/download</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>AuthServlet</servlet-name>
+        <servlet-class>ru.job4j.dream.servlet.AuthServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
-        <servlet-name>PostServlet</servlet-name>
-        <url-pattern>/post/posts.do</url-pattern>
+        <servlet-name>AuthServlet</servlet-name>
+        <url-pattern>/auth.do</url-pattern>
     </servlet-mapping>
+    <filter>
+        <filter-name>AuthFilter</filter-name>
+        <filter-class>ru.job4j.dream.filter.AuthFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>AuthFilter</filter-name>
+        <url-pattern>*.do</url-pattern>
+    </filter-mapping>
+    <servlet>
+        <servlet-name>IndexServlet</servlet-name>
+        <servlet-class>ru.job4j.dream.servlet.IndexServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>IndexServlet</servlet-name>
         <url-pattern>/index.do</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>CandidatesServlet</servlet-name>
-        <url-pattern>/candidate/candidates.do</url-pattern>
     </servlet-mapping>
 </web-app>
