@@ -65,8 +65,7 @@ public class PsqlStore implements Store {
                 while (it.next()) {
                     int id = it.getInt("id");
                     String name = it.getString("name");
-                    if (id >= 0 && name != null && !name.isEmpty())
-                        posts.add(new Post(id, name));
+                    posts.add(new Post(id, name));
                 }
             }
         } catch (Exception e) {
@@ -85,8 +84,7 @@ public class PsqlStore implements Store {
                 while (it.next()) {
                     int id = it.getInt("id");
                     String name = it.getString("name");
-                    if (id >= 0 && name != null && !name.isEmpty())
-                        candidates.add(new Candidate(id, name));
+                    candidates.add(new Candidate(id, name));
                 }
             }
         } catch (Exception e) {
@@ -104,14 +102,12 @@ public class PsqlStore implements Store {
         }
     }
 
-    private Post create(Post post) {
+    private void create(Post post) {
         try (Connection cn = pool.getConnection();
              PreparedStatement ps = cn.prepareStatement("INSERT INTO post(name) VALUES (?)",
                      PreparedStatement.RETURN_GENERATED_KEYS)
         ) {
             String name = post.getName();
-            if (name == null || name.isEmpty())
-                throw new RuntimeException("empty name");
             ps.setString(1, name);
             ps.execute();
             try (ResultSet id = ps.getGeneratedKeys()) {
@@ -122,7 +118,6 @@ public class PsqlStore implements Store {
         } catch (Exception e) {
             MyLogger.logException(e.getMessage());
         }
-        return post;
     }
 
     private void update(Post post) {
@@ -130,11 +125,9 @@ public class PsqlStore implements Store {
              PreparedStatement ps = cn.prepareStatement("UPDATE post SET name = ? WHERE id = ?")
         ) {
             String name = post.getName();
-            if (name == null || name.isEmpty())
-                throw new RuntimeException("empty name");
             ps.setString(1, name);
             ps.setInt(2, post.getId());
-            ps.execute();
+            ps.executeUpdate();
         } catch (Exception e) {
             MyLogger.logException(e.getMessage());
         }
@@ -148,12 +141,10 @@ public class PsqlStore implements Store {
         ) {
             ps.setInt(1, id);
             try (ResultSet it = ps.executeQuery()) {
-                if (it.next())
-                    if (it.next()) {
-                        String name = it.getString("name");
-                        if (name != null && !name.isEmpty())
-                            result = new Post(id, name);
-                    }
+                if (it.next()) {
+                    String name = it.getString("name");
+                    result = new Post(id, name);
+                }
             }
         } catch (Exception e) {
             MyLogger.logException(e.getMessage());
@@ -183,13 +174,11 @@ public class PsqlStore implements Store {
         }
     }
 
-    private Candidate create(Candidate candidate) {
+    private void create(Candidate candidate) {
         try (Connection cn = pool.getConnection();
              PreparedStatement ps = cn.prepareStatement("INSERT INTO candidate (name) VALUES (?)",
                      PreparedStatement.RETURN_GENERATED_KEYS)) {
             String name = candidate.getName();
-            if (name == null || name.isEmpty())
-                throw new RuntimeException("empty name");
             ps.setString(1, name);
             ps.executeUpdate();
             try (ResultSet id = ps.getGeneratedKeys()) {
@@ -200,15 +189,12 @@ public class PsqlStore implements Store {
         } catch (Exception e) {
             MyLogger.logException(e.getMessage());
         }
-        return candidate;
     }
 
     private void update(Candidate candidate) {
         try (Connection cn = pool.getConnection();
              PreparedStatement ps = cn.prepareStatement("UPDATE candidate SET name=? WHERE id=?")) {
             String name = candidate.getName();
-            if (name == null || name.isEmpty())
-                throw new RuntimeException("empty name");
             ps.setString(1, name);
             ps.setInt(2, candidate.getId());
             ps.executeUpdate();
@@ -227,8 +213,7 @@ public class PsqlStore implements Store {
             try (ResultSet it = ps.executeQuery()) {
                 if (it.next()) {
                     String name = it.getString("name");
-                    if (name != null && !name.isEmpty())
-                        result = new Candidate(id, name);
+                    result = new Candidate(id, name);
                 }
             }
         } catch (Exception e) {
@@ -260,23 +245,14 @@ public class PsqlStore implements Store {
         }
     }
 
-    private User create(User user) {
+    private void create(User user) {
         try (Connection cn = pool.getConnection();
              PreparedStatement ps = cn.prepareStatement("INSERT INTO user_account(name, email, password) VALUES (?,?,?)",
                      PreparedStatement.RETURN_GENERATED_KEYS)
         ) {
             String name = user.getName();
-            if (name == null || name.isEmpty())
-                throw new RuntimeException("empty name");
             String email = user.getEmail();
-            if (email == null || email.isEmpty())
-                throw new RuntimeException("empty email");
-            User u = PsqlStore.instOf().findUserByEmail(email);
-            if (u!=null)
-                throw new RuntimeException("user with this email already exists");
             String password = user.getPassword();
-            if (password == null || password.isEmpty())
-                throw new RuntimeException("empty password");
             ps.setString(1, name);
             ps.setString(2, email);
             ps.setString(3, password);
@@ -289,7 +265,6 @@ public class PsqlStore implements Store {
         } catch (Exception e) {
             MyLogger.logException(e.getMessage());
         }
-        return user;
     }
 
     private void update(User user) {
@@ -297,19 +272,13 @@ public class PsqlStore implements Store {
              PreparedStatement ps = cn.prepareStatement("UPDATE user_account SET name = ?, email = ?, password = ? WHERE id = ?")
         ) {
             String name = user.getName();
-            if (name == null || name.isEmpty())
-                throw new RuntimeException("empty name");
             String email = user.getEmail();
-            if (email == null || email.isEmpty())
-                throw new RuntimeException("empty email");
             String password = user.getPassword();
-            if (password == null || password.isEmpty())
-                throw new RuntimeException("empty password");
             ps.setString(1, name);
             ps.setString(2, email);
             ps.setString(3, password);
             ps.setInt(4, user.getId());
-            ps.execute();
+            ps.executeUpdate();
         } catch (Exception e) {
             MyLogger.logException(e.getMessage());
         }
@@ -325,17 +294,9 @@ public class PsqlStore implements Store {
                 while (it.next()) {
                     int id = it.getInt("id");
                     String name = it.getString("name");
-                    ;
-                    if (name == null || name.isEmpty())
-                        throw new RuntimeException("empty name");
                     String email = it.getString("email");
-                    if (email == null || email.isEmpty())
-                        throw new RuntimeException("empty email");
                     String password = it.getString("password");
-                    if (password == null || password.isEmpty())
-                        throw new RuntimeException("empty password");
-                    if (id >= 0)
-                        users.add(new User(id, name, email, password));
+                    users.add(new User(id, name, email, password));
                 }
             }
         } catch (Exception e) {
@@ -354,15 +315,8 @@ public class PsqlStore implements Store {
             try (ResultSet it = ps.executeQuery()) {
                 if (it.next()) {
                     String name = it.getString("name");
-                    if (name == null || name.isEmpty())
-                        throw new RuntimeException("empty name");
                     String email = it.getString("email");
-                    if (email == null || email.isEmpty())
-                        throw new RuntimeException("empty email");
                     String password = it.getString("password");
-                    if (password == null || password.isEmpty())
-                        throw new RuntimeException("empty password");
-
                     result = new User(id, name, email, password);
                 }
             }
@@ -382,12 +336,8 @@ public class PsqlStore implements Store {
             try (ResultSet it = ps.executeQuery()) {
                 if (it.next()) {
                     String name = it.getString("name");
-                    if (name == null || name.isEmpty())
-                        throw new RuntimeException("empty name");
                     int id = it.getInt("id");
                     String password = it.getString("password");
-                    if (password == null || password.isEmpty())
-                        throw new RuntimeException("empty password");
                     result = new User(id, name, email, password);
                 }
             }
