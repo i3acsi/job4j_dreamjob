@@ -22,6 +22,6 @@ public class RegServlet extends HttpServlet {
         String password = req.getParameter("password");
         User newUser = new User(0, name, email, password);
         PsqlStore.instOf().save(newUser);
-        req.getRequestDispatcher("index.jsp").forward(req, resp);
+        req.getRequestDispatcher("login.jsp").forward(req, resp);
     }
 }
