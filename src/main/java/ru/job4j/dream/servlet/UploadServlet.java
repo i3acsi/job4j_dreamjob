@@ -4,7 +4,9 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import ru.job4j.dream.logger.MyLogger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import ru.job4j.dream.store.Store;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -19,6 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UploadServlet extends HttpServlet {
+    private static final Logger log = LoggerFactory.getLogger(Store.class);
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setAttribute("user", req.getSession().getAttribute("user"));
@@ -54,7 +58,7 @@ public class UploadServlet extends HttpServlet {
                 }
             }
         } catch (FileUploadException e) {
-            MyLogger.logException(e.getMessage());
+            log.error(e.getMessage());
         }
         resp.sendRedirect(req.getContextPath() + "/candidates.do");
     }

@@ -1,7 +1,8 @@
 package ru.job4j.dream.store;
 
 import org.apache.commons.dbcp2.BasicDataSource;
-import ru.job4j.dream.logger.MyLogger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.job4j.dream.model.Candidate;
 import ru.job4j.dream.model.Post;
 import ru.job4j.dream.model.User;
@@ -19,7 +20,7 @@ import java.util.List;
 import java.util.Properties;
 
 public class PsqlStore implements Store {
-
+    private static final Logger log = LoggerFactory.getLogger(Store.class);
     private final BasicDataSource pool = new BasicDataSource();
 
     private PsqlStore() {
@@ -29,13 +30,13 @@ public class PsqlStore implements Store {
         )) {
             cfg.load(io);
         } catch (Exception e) {
-            MyLogger.logException(e.getMessage());
+            log.error(e.getMessage());
             throw new IllegalStateException(e);
         }
         try {
             Class.forName(cfg.getProperty("jdbc.driver"));
         } catch (Exception e) {
-            MyLogger.logException(e.getMessage());
+            log.error(e.getMessage());
             throw new IllegalStateException(e);
         }
         pool.setDriverClassName(cfg.getProperty("jdbc.driver"));
@@ -69,7 +70,7 @@ public class PsqlStore implements Store {
                 }
             }
         } catch (Exception e) {
-            MyLogger.logException(e.getMessage());
+            log.error(e.getMessage());
         }
         return posts;
     }
@@ -88,7 +89,7 @@ public class PsqlStore implements Store {
                 }
             }
         } catch (Exception e) {
-            MyLogger.logException(e.getMessage());
+            log.error(e.getMessage());
         }
         return candidates;
     }
@@ -116,7 +117,7 @@ public class PsqlStore implements Store {
                 }
             }
         } catch (Exception e) {
-            MyLogger.logException(e.getMessage());
+            log.error(e.getMessage());
         }
     }
 
@@ -129,7 +130,7 @@ public class PsqlStore implements Store {
             ps.setInt(2, post.getId());
             ps.executeUpdate();
         } catch (Exception e) {
-            MyLogger.logException(e.getMessage());
+            log.error(e.getMessage());
         }
     }
 
@@ -147,7 +148,7 @@ public class PsqlStore implements Store {
                 }
             }
         } catch (Exception e) {
-            MyLogger.logException(e.getMessage());
+            log.error(e.getMessage());
         }
         return result;
     }
@@ -160,7 +161,7 @@ public class PsqlStore implements Store {
             ps.setInt(1, id);
             ps.executeUpdate();
         } catch (Exception e) {
-            MyLogger.logException(e.getMessage());
+            log.error(e.getMessage());
         }
     }
 
@@ -187,7 +188,7 @@ public class PsqlStore implements Store {
                 }
             }
         } catch (Exception e) {
-            MyLogger.logException(e.getMessage());
+            log.error(e.getMessage());
         }
     }
 
@@ -199,7 +200,7 @@ public class PsqlStore implements Store {
             ps.setInt(2, candidate.getId());
             ps.executeUpdate();
         } catch (Exception e) {
-            MyLogger.logException(e.getMessage());
+            log.error(e.getMessage());
         }
     }
 
@@ -217,7 +218,7 @@ public class PsqlStore implements Store {
                 }
             }
         } catch (Exception e) {
-            MyLogger.logException(e.getMessage());
+            log.error(e.getMessage());
         }
         return result;
     }
@@ -232,7 +233,7 @@ public class PsqlStore implements Store {
             File file = new File("images" + File.separator + id);
             Files.deleteIfExists(file.toPath());
         } catch (Exception e) {
-            MyLogger.logException(e.getMessage());
+            log.error(e.getMessage());
         }
     }
 
@@ -263,7 +264,7 @@ public class PsqlStore implements Store {
                 }
             }
         } catch (Exception e) {
-            MyLogger.logException(e.getMessage());
+            log.error(e.getMessage());
         }
     }
 
@@ -280,7 +281,7 @@ public class PsqlStore implements Store {
             ps.setInt(4, user.getId());
             ps.executeUpdate();
         } catch (Exception e) {
-            MyLogger.logException(e.getMessage());
+            log.error(e.getMessage());
         }
     }
 
@@ -300,7 +301,7 @@ public class PsqlStore implements Store {
                 }
             }
         } catch (Exception e) {
-            MyLogger.logException(e.getMessage());
+            log.error(e.getMessage());
         }
         return users;
     }
@@ -321,7 +322,7 @@ public class PsqlStore implements Store {
                 }
             }
         } catch (Exception e) {
-            MyLogger.logException(e.getMessage());
+            log.error(e.getMessage());
         }
         return result;
     }
@@ -342,7 +343,7 @@ public class PsqlStore implements Store {
                 }
             }
         } catch (Exception e) {
-            MyLogger.logException(e.getMessage());
+            log.error(e.getMessage());
         }
         return result;
     }
@@ -355,7 +356,7 @@ public class PsqlStore implements Store {
             ps.setInt(1, id);
             ps.executeUpdate();
         } catch (Exception e) {
-            MyLogger.logException(e.getMessage());
+            log.error(e.getMessage());
         }
     }
 }
