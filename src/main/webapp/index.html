@@ -14,21 +14,37 @@
                 alert("Введите имя");
                 valid = false;
             }
+
             if ($('#surname').val() === '') {
                 alert("Введите фамилию");
                 valid = false;
             }
 
-            if ($('#sex').empty()) {
+            if ($('#sex').find("option:selected").val() === undefined) {
                 alert("Выберите пол");
-                    valid = false;
+                valid = false;
             }
 
             if ($('#description').val() === '') {
                 alert("Введите описание");
                 valid = false;
             }
+            if (valid) {
+
+            }
             return valid;
+        }
+
+        function addRow() {
+            var name = $('#name').val()
+            var surname = $('#surname').val()
+            var sex = $('#sex').find("option:selected").val()
+            var description = $('#description').val()
+            $('#table tr:last').after('<tr><td>'
+                + name + '</td><td>'
+                + surname + '</td><td>'
+                + sex + '</td><td>'
+                + description + '</td></tr>');
         }
     </script>
 </head>
@@ -64,7 +80,7 @@
 
 </div>
 <div>
-    <table class="table">
+    <table class="table" id="table">
         <thead>
         <tr>
             <th>Имя</th>
@@ -77,11 +93,12 @@
         <tr>
             <td>Василий</td>
             <td>Гасевский</td>
-            <td>М</td>
+            <td>male</td>
             <td>User</td>
         </tr>
         </tbody>
     </table>
+    <button type="button" class="btn btn-primary" onclick="addRow()">Добавить пользователя</button>
 </div>
 </body>
 </html>
