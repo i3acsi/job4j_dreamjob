@@ -16,9 +16,9 @@ public class GreetingServlet extends HttpServlet {
         String name = req.getParameter("name");
         PrintWriter writer = new PrintWriter(resp.getOutputStream());
         if  (name.isEmpty()) {
-            writer.println("Type email");
+            writer.println("\"Type email\"");
         } else {
-            writer.println("Nice to meet you, " + name);
+            writer.println("\"Nice to meet you, " + name + "\"");
         }
         writer.flush();
     }

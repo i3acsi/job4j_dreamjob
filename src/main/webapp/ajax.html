@@ -14,13 +14,13 @@
         $.ajax({
             type: 'GET',
             url: 'http://localhost:8030/dreamjob/greet',
-            data: 'name=' + $('#exampleInputEmail1').val(),
-            dataType: 'text',
+            data: {"name": $('#exampleInputEmail1').val()},
+            dataType: 'json',
             err: 'error'
         }).done(function (data) {
             $('#txt').text(data)
         }).fail(function (err) {
-            alert(err);
+            alert('error');
         });
     }
 </script>
