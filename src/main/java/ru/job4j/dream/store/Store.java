@@ -1,6 +1,8 @@
 package ru.job4j.dream.store;
 
+import ru.job4j.dream.dto.CandidateDTO;
 import ru.job4j.dream.model.Candidate;
+import ru.job4j.dream.model.City;
 import ru.job4j.dream.model.Post;
 import ru.job4j.dream.model.User;
 
@@ -11,7 +13,7 @@ public interface Store {
 
     Collection<Candidate> findAllCandidates();
 
-    void save(Post post);
+    Post save(Post post);
 
     Post findPostById(int id);
 
@@ -23,7 +25,7 @@ public interface Store {
 
     void delete(Candidate candidate);
 
-    void save(User user);
+    User save(User user);
 
     Collection<User> findAllUsers();
 
@@ -33,4 +35,15 @@ public interface Store {
 
     void delete(User user);
 
+    Collection<City> findAllCities();
+
+    City findCityById(int id);
+
+    City findCityByName(String name);
+
+    City save(City city);
+
+    void delete(City city);
+
+    Collection<CandidateDTO> findAllCandidateDto();
 }

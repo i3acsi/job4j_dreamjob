@@ -9,6 +9,14 @@
 
     <display-name>Archetype Created Web Application</display-name>
     <servlet>
+        <servlet-name>CityServlet</servlet-name>
+        <servlet-class>ru.job4j.dream.servlet.CityServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CityServlet</servlet-name>
+        <url-pattern>/cities.do</url-pattern>
+    </servlet-mapping>
+    <servlet>
         <servlet-name>PostServlet</servlet-name>
         <servlet-class>ru.job4j.dream.servlet.PostServlet</servlet-class>
     </servlet>
@@ -76,7 +84,6 @@
         <servlet-name>GreetingServlet</servlet-name>
         <servlet-class>ru.job4j.dream.servlet.GreetingServlet</servlet-class>
     </servlet>
-
     <servlet-mapping>
         <servlet-name>GreetingServlet</servlet-name>
         <url-pattern>/greet</url-pattern>

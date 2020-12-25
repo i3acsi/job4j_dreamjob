@@ -9,7 +9,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script>
         function validate() {
-            var valid = true;
+            let valid = true;
             if ($('#name').val() === '') {
                 alert("Введите имя");
                 valid = false;
@@ -29,22 +29,21 @@
                 alert("Введите описание");
                 valid = false;
             }
-            if (valid) {
-
-            }
             return valid;
         }
 
         function addRow() {
-            var name = $('#name').val()
-            var surname = $('#surname').val()
-            var sex = $('#sex').find("option:selected").val()
-            var description = $('#description').val()
-            $('#table tr:last').after('<tr><td>'
-                + name + '</td><td>'
-                + surname + '</td><td>'
-                + sex + '</td><td>'
-                + description + '</td></tr>');
+            if (validate()) {
+                let name = $('#name').val()
+                let surname = $('#surname').val()
+                let sex = $('#sex').find("option:selected").val()
+                let description = $('#description').val()
+                $('#table tr:last').after('<tr><td>'
+                    + name + '</td><td>'
+                    + surname + '</td><td>'
+                    + sex + '</td><td>'
+                    + description + '</td></tr>');
+            }
         }
     </script>
 </head>
@@ -56,8 +55,8 @@
     <br>
     <form action="/Index.html" method="post">
         <div class="form-group">
-            <label for="name">Имя:</label>
-            <input type="text" class="form-control" id="name">
+            <label for='name'>Имя:</label>
+            <input type="text" class="form-control" id='name'>
         </div>
         <div class="form-group">
             <label for="surname">Фамилия:</label>
@@ -74,7 +73,7 @@
             <label for="description">Описание:</label>
             <input type="text" class="form-control" id="description">
         </div>
-        <button type="button" class="btn btn-default" onclick="return validate();">Submit</button>
+        <!--        <button type="button" class="btn btn-default" onclick="return validate();">Submit</button>-->
     </form>
     </br>
 

@@ -1,5 +1,7 @@
 package ru.job4j.dream.filter;
 
+import ru.job4j.dream.model.User;
+
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,6 +20,15 @@ public class AuthFilter implements Filter {
         String uri = req.getRequestURI();
         if (uri.endsWith("auth.do") || uri.endsWith("reg.do")) {
             chain.doFilter(sreq, sresp);
+            return;
+        }
+        if (uri.contains("cities.do")) {
+            User user = (User) req.getSession().getAttribute("user");
+            if (!user.getEmail().equals("root@local")){
+                resp.sendRedirect(req.getContextPath());
+            }else {
+                chain.doFilter(sreq, sresp);
+            }
             return;
         }
         if (req.getSession().getAttribute("user") == null) {
