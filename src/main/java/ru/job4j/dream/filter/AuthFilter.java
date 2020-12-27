@@ -24,7 +24,7 @@ public class AuthFilter implements Filter {
         }
         if (uri.contains("cities.do")) {
             User user = (User) req.getSession().getAttribute("user");
-            if (!user.getEmail().equals("root@local")){
+            if (req.getMethod().toString().equals("POST") && !(user.getEmail().equals("root@local") )){
                 resp.sendRedirect(req.getContextPath());
             }else {
                 chain.doFilter(sreq, sresp);

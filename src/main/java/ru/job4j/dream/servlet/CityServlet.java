@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
+import java.util.Iterator;
 import java.util.stream.Collectors;
 
 public class CityServlet extends HttpServlet {
@@ -20,8 +21,25 @@ public class CityServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.setAttribute("cities", store.findAllCities().stream().map(Mapper::CityToJson).collect(Collectors.toList()));
-        req.getRequestDispatcher("/city.jsp").forward(req, resp);
+        if (req.getParameter("edit") != null) {
+            req.setAttribute("cities", store.findAllCities());
+            String id = req.getParameter("id");
+            if (id != null){
+                String name = req.getParameter("name");
+                String cityId = req.getParameter("cityId");
+                String cityName = req.getParameter("cityName");
+
+                req.setAttribute("id", id);
+                req.setAttribute("name", name);
+                req.setAttribute("cityId", cityId);
+                req.setAttribute("cityName", cityName);
+            }
+
+            req.getRequestDispatcher("/candidate/edit_candidate.jsp").forward(req, resp);
+        } else {
+            req.setAttribute("cities", store.findAllCities().stream().map(Mapper::objToJson).collect(Collectors.toList()));
+            req.getRequestDispatcher("/city.jsp").forward(req, resp);
+        }
     }
 
 
@@ -33,15 +51,15 @@ public class CityServlet extends HttpServlet {
         String name = req.getParameter("name");
         String remove = req.getParameter("remove");
         City city = new City(Integer.parseInt(id), name);
-        if ( remove!= null) {
+        if (remove != null) {
             store.delete(city);
         } else {
             city = store.save(city);
-            if (city.getId()==-1){
+            if (city.getId() == -1) {
                 resp.sendError(400, "Город с таким названием уже существует");
             }
         }
-        String json = Mapper.CityToJson(city);
+        String json = Mapper.objToJson(city);
         writer.println(json);
         writer.flush();
     }

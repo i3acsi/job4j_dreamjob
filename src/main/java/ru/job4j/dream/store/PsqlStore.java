@@ -32,13 +32,13 @@ public class PsqlStore implements Store {
         )) {
             cfg.load(io);
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.error(e.getMessage(), e);
             throw new IllegalStateException(e);
         }
         try {
             Class.forName(cfg.getProperty("jdbc.driver"));
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.error(e.getMessage(), e);
             throw new IllegalStateException(e);
         }
         pool.setDriverClassName(cfg.getProperty("jdbc.driver"));
@@ -72,7 +72,7 @@ public class PsqlStore implements Store {
                 }
             }
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.error(e.getMessage(), e);
         }
         return posts;
     }
@@ -92,7 +92,7 @@ public class PsqlStore implements Store {
                 }
             }
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.error(e.getMessage(), e);
         }
         return candidates;
     }
@@ -100,9 +100,9 @@ public class PsqlStore implements Store {
     @Override
     public Post save(Post post) {
         if (post.getId() == 0) {
-           return create(post);
+            return create(post);
         } else {
-           return update(post);
+            return update(post);
         }
     }
 
@@ -120,7 +120,7 @@ public class PsqlStore implements Store {
                 }
             }
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.error(e.getMessage(), e);
         }
         return post;
     }
@@ -134,7 +134,7 @@ public class PsqlStore implements Store {
             ps.setInt(2, post.getId());
             ps.executeUpdate();
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.error(e.getMessage(), e);
         }
         return post;
     }
@@ -153,7 +153,7 @@ public class PsqlStore implements Store {
                 }
             }
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.error(e.getMessage(), e);
         }
         return result;
     }
@@ -166,21 +166,21 @@ public class PsqlStore implements Store {
             ps.setInt(1, id);
             ps.executeUpdate();
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.error(e.getMessage(), e);
         }
     }
 
 
     @Override
-    public void save(Candidate candidate) {
+    public Candidate save(Candidate candidate) {
         if (candidate.getId() == 0) {
-            create(candidate);
+            return create(candidate);
         } else {
-            update(candidate);
+            return update(candidate);
         }
     }
 
-    private void create(Candidate candidate) {
+    private Candidate create(Candidate candidate) {
         try (Connection cn = pool.getConnection();
              PreparedStatement ps = cn.prepareStatement("INSERT INTO candidate (name, cityId) VALUES (?,?)",
                      PreparedStatement.RETURN_GENERATED_KEYS)) {
@@ -195,11 +195,13 @@ public class PsqlStore implements Store {
                 }
             }
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.error(e.getMessage(), e);
+            return new Candidate(-1, "", -1);
         }
+        return candidate;
     }
 
-    private void update(Candidate candidate) {
+    private Candidate update(Candidate candidate) {
         try (Connection cn = pool.getConnection();
              PreparedStatement ps = cn.prepareStatement("UPDATE candidate SET name = ?, cityId = ? WHERE id=?")) {
             int id = candidate.getId();
@@ -210,8 +212,10 @@ public class PsqlStore implements Store {
             ps.setInt(3, id);
             ps.executeUpdate();
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.error(e.getMessage(), e);
+            return new Candidate(-1, "", -1);
         }
+        return candidate;
     }
 
     @Override
@@ -229,7 +233,7 @@ public class PsqlStore implements Store {
                 }
             }
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.error(e.getMessage(), e);
         }
         return result;
     }
@@ -244,7 +248,7 @@ public class PsqlStore implements Store {
             File file = new File("images" + File.separator + id);
             Files.deleteIfExists(file.toPath());
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -275,7 +279,7 @@ public class PsqlStore implements Store {
                 }
             }
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.error(e.getMessage(), e);
         }
         return user;
     }
@@ -293,7 +297,7 @@ public class PsqlStore implements Store {
             ps.setInt(4, user.getId());
             ps.executeUpdate();
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.error(e.getMessage(), e);
         }
         return user;
     }
@@ -314,7 +318,7 @@ public class PsqlStore implements Store {
                 }
             }
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.error(e.getMessage(), e);
         }
         return users;
     }
@@ -335,7 +339,7 @@ public class PsqlStore implements Store {
                 }
             }
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.error(e.getMessage(), e);
         }
         return result;
     }
@@ -356,7 +360,7 @@ public class PsqlStore implements Store {
                 }
             }
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.error(e.getMessage(), e);
         }
         return result;
     }
@@ -369,7 +373,7 @@ public class PsqlStore implements Store {
             ps.setInt(1, id);
             ps.executeUpdate();
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -387,7 +391,7 @@ public class PsqlStore implements Store {
                 }
             }
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.error(e.getMessage(), e);
         }
         return cities;
     }
@@ -406,7 +410,7 @@ public class PsqlStore implements Store {
                 }
             }
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.error(e.getMessage(), e);
         }
         return result;
     }
@@ -425,7 +429,7 @@ public class PsqlStore implements Store {
                 }
             }
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.error(e.getMessage(), e);
         }
         return result;
     }
@@ -453,8 +457,8 @@ public class PsqlStore implements Store {
                 }
             }
         } catch (Exception e) {
-            log.error(e.getMessage());
-            return new City(-1,"");
+            log.error(e.getMessage(), e);
+            return new City(-1, "");
         }
         return city;
     }
@@ -468,8 +472,8 @@ public class PsqlStore implements Store {
             ps.setInt(2, city.getId());
             ps.executeUpdate();
         } catch (Exception e) {
-            log.error(e.getMessage());
-            return new City(-1,"");
+            log.error(e.getMessage(), e);
+            return new City(-1, "");
         }
         return city;
     }
@@ -482,7 +486,7 @@ public class PsqlStore implements Store {
             ps.setInt(1, id);
             ps.executeUpdate();
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -491,18 +495,19 @@ public class PsqlStore implements Store {
         List<CandidateDTO> candidateDTOS = new ArrayList<>();
         try (Connection cn = pool.getConnection();
              PreparedStatement ps = cn.prepareStatement(
-                     "SELECT candidate.id, candidate.name, city.name FROM candidate INNER JOIN city ON candidate.cityId = city.id")
+                     "SELECT candidate.id, candidate.name, candidate.cityid, city.name FROM candidate INNER JOIN city ON candidate.cityId = city.id")
         ) {
             try (ResultSet it = ps.executeQuery()) {
                 while (it.next()) {
                     int id = it.getInt(1);
                     String name = it.getString(2);
-                    String city = it.getString(3);
-                    candidateDTOS.add(new CandidateDTO(id, name, city));
+                    int cityId = it.getInt(3);
+                    String cityName = it.getString(4);
+                    candidateDTOS.add(new CandidateDTO(id, name, cityId, cityName));
                 }
             }
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.error(e.getMessage(), e);
         }
         return candidateDTOS;
     }

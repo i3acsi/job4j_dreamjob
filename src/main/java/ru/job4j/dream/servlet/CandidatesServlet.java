@@ -1,7 +1,7 @@
 package ru.job4j.dream.servlet;
 
 import ru.job4j.dream.model.Candidate;
-import ru.job4j.dream.model.City;
+import ru.job4j.dream.service.Mapper;
 import ru.job4j.dream.store.PsqlStore;
 import ru.job4j.dream.store.Store;
 
@@ -10,6 +10,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 
 public class CandidatesServlet extends HttpServlet {
     private Store store = PsqlStore.instOf();
@@ -18,7 +22,7 @@ public class CandidatesServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String id = req.getParameter("id");
         if (id != null) {
-            store.delete( new Candidate(Integer.parseInt(id), "remove", 0));
+            store.delete(new Candidate(Integer.parseInt(id), "remove", 0));
         }
         req.setAttribute("candidates", store.findAllCandidateDto());
         req.getRequestDispatcher("/candidate/candidates.jsp").forward(req, resp);
@@ -27,20 +31,20 @@ public class CandidatesServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");
-        String cityName = req.getParameter("cityName");
-        City city = store.findCityByName(cityName);
-        if (city == null) {
-            store.save(new City(0, cityName));
-            city = store.findCityByName(cityName);
+        resp.setContentType("text/plain");
+        resp.setCharacterEncoding("UTF-8");
+        int id = Integer.parseInt(req.getParameter("id"));
+        String name = req.getParameter("name");
+        int cityId = Integer.parseInt(req.getParameter("cityId"));
+        Candidate result = store.save(new Candidate(id, name, cityId));
+        if (result.getId() == -1) {
+            resp.sendError(400, "Ошибка вставки данных");
         }
-        int cityId = city.getId();
-        store.save(
-                new Candidate(
-                        Integer.parseInt(req.getParameter("id")),
-                        req.getParameter("name"),
-                        cityId
-                )
-        );
-        resp.sendRedirect(req.getContextPath() + "/candidates.do");
+//        else {
+//            PrintWriter writer = resp.getWriter();
+//            writer.write(Mapper.objToJson(result));
+//            resp.setStatus(200);
+//            writer.flush();
+//        }
     }
 }

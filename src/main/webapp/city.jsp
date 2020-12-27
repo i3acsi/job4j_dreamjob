@@ -4,7 +4,8 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" http-equiv="Content-Type" name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta charset="UTF-8" http-equiv="Content-Type" name="viewport"
+          content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
@@ -15,6 +16,7 @@
 <body>
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <jsp:include page="/nav.jsp"/>
+<script></script>
 <script type="text/javascript">
     function clearText() {
         document.getElementById('txt').textContent = ''
@@ -28,7 +30,7 @@
                 <div><label id="txt"></label></div>
                 <label for="newCity" id="hint"></label>
                 <input type="text" class="form-control" id="newCity"
-                       placeholder="Введите название города" onclick="clearText()">
+                       placeholder="азвание города" onclick="clearText()">
             </div>
             <button type="button" class="btn btn-primary" onclick="addCity()">Submit</button>
         </form>
@@ -38,14 +40,24 @@
             <div class="card-header">
                 Города
             </div>
+            <script>
+                $cities = $.get({
+                    url: 'http://localhost:8030/dreamjob/cities.do'
+                }).done(function (json) {
+                    return json
+                }).fail(function (err) {
+                    alert(err)
+                    return ''
+                })
+            </script>
             <div class="card-body">
                 <table class="table" id="table">
                     <tbody>
                     <c:forEach items="${cities}" var="cityJson">
-                            <script>
-                                city = ${cityJson}
-                                    addRow(city.id, city.name)
-                            </script>
+                        <script>
+                            city = ${cityJson}
+                                addRow(city.id, city.name)
+                        </script>
                     </c:forEach>
                     </tbody>
                 </table>

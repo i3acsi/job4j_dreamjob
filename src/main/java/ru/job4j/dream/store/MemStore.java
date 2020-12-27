@@ -43,11 +43,11 @@ public class MemStore implements Store {
         return posts.get(id);
     }
 
-    public void save(Candidate candidate) {
+    public Candidate save(Candidate candidate) {
         if (candidate.getId() == 0) {
             candidate.setId(CANDIDATE_ID.incrementAndGet());
         }
-        candidates.put(candidate.getId(), candidate);
+        return candidates.put(candidate.getId(), candidate);
     }
 
     public Candidate findCandidateById(int id) {

@@ -1,7 +1,12 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
-<%@ page import="ru.job4j.dream.store.PsqlStore" %>
 <%@ page import="ru.job4j.dream.model.Candidate" %>
 <%@ page import="ru.job4j.dream.model.City" %>
+<%@ page import="ru.job4j.dream.store.PsqlStore" %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="java.util.List" %>
+<%@ page import="ru.job4j.dream.service.Mapper" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -27,13 +32,49 @@
 <body>
 <%
     String id = request.getParameter("id");
-    Candidate candidate = new Candidate(0, "", 0);
-    City city = new City(0, "");
-    if (id != null) {
-        candidate = PsqlStore.instOf().findCandidateById(Integer.parseInt(id));
-        city = PsqlStore.instOf().findCityById(candidate.getCityId());
+    Candidate candidate;
+    if (id == null) {
+        candidate = new Candidate(0, "", 0);
+//        city = new City()
+    } else {
+        String name = request.getParameter("name");
+        int cityId = Integer.parseInt(request.getParameter("cityId"));
+        candidate = new Candidate(Integer.parseInt(id), name, cityId);
     }
 %>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script>
+    function validate() {
+        let result = true
+        if (document.getElementById('name').textContent === '') {
+            alert('false')
+            result = false
+        }
+        alert('true')
+        return result;
+    }
+    function redirect() {
+        document.location.href = 'http://localhost:8030/dreamjob/candidates.do'
+    }
+    function saveCandidate() {
+        let id = <%=candidate.getId()%>;
+        let name = $('#name').val();
+        let cityId = $('select').find("option:selected").val()
+        $.post({
+            url: 'http://localhost:8030/dreamjob/candidates.do',
+            data: {
+                "id": id,
+                "name": name,
+                "cityId": cityId
+            },
+            dataType: 'json'
+        }).done(function () {
+            redirect()
+        }).fail(function () {
+            redirect()
+        });
+    }
+</script>
 <jsp:include page="/nav.jsp"/>
 <div class="container pt-3">
     <div class="row">
@@ -46,17 +87,21 @@
                 <% } %>
             </div>
             <div class="card-body">
-                <form action="<%=request.getContextPath()%>/candidates.do?id=<%=candidate.getId()%>"
-                      method="post">
+                <form>
                     <div class="form-group">
                         <label>Имя</label>
-                        <input type="text" class="form-control" name="name" value="<%=candidate.getName()%>">
+                        <input type="text" class="form-control" name="name" value="<%=candidate.getName()%>" id="name">
                     </div>
                     <div class="form-group">
                         <label>Город</label>
-                        <input type="text" class="form-control" name="cityName" value="<%=city.getName()%>">
+                        <c:set var="cityId" value="<%=candidate.getCityId()%>" scope="application"/>
+                        <select id="select">
+                            <c:forEach items="${cities}" var="city">
+                                <option value="${city.id}" ${city.id == cityId ? 'selected' : 'true'}>${city.name}</option>
+                            </c:forEach>
+                        </select>
                     </div>
-                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                    <button type="submit" class="btn btn-primary" onclick="saveCandidate()">Сохранить</button>
                 </form>
             </div>
         </div>

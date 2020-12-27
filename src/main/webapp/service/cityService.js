@@ -11,7 +11,7 @@ function addCity() {
             addRow(city.id, city.name)
         }).fail(function (err) {
             if (err.status === 400) {
-                $('#txt').text('Город с таким названием уже существует')
+                $('#txt').text(err.message)
             } else {
                 alert(err)
             }
@@ -42,7 +42,7 @@ function updateCity(id, cityName) {
             addRow(city.id, city.name)
         }).fail(function (err) {
             if (err.status === 400) {
-                $('#txt').text('Город с таким названием уже существует')
+                $('#txt').text(err.message)
             } else {
                 alert(err)
             }

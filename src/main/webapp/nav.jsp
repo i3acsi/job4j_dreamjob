@@ -24,37 +24,41 @@
 <%
     User user = (User) request.getSession().getAttribute("user");
     String value = "Войти";
+    boolean isLoggedIn = false;
     boolean isRoot = false;
     if (user != null) {
+        isLoggedIn = true;
         value = user.getName() + " | Выйти";
         isRoot = (user.getEmail().equals("root@local"));
     }
 %>
 <div class="row">
     <ul class="nav">
-        <li class="nav-item">
-            <a class="nav-link" href="<%=request.getContextPath()%>/posts.do">Вакансии</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="<%=request.getContextPath()%>/candidates.do">Кандидаты</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="<%=request.getContextPath()%>/post/edit_post.jsp">Добавить вакансию</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="<%=request.getContextPath()%>/candidate/edit_candidate.jsp">Добавить кандидата</a>
-        </li>
+        <c:if test="<%=isLoggedIn%>">
+            <li class="nav-item">
+                <a class="nav-link" href="<%=request.getContextPath()%>/posts.do">Вакансии</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="<%=request.getContextPath()%>/candidates.do">Кандидаты</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="<%=request.getContextPath()%>/post/edit_post.jsp">Добавить вакансию</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="<%=request.getContextPath()%>/cities.do?edit=true">Добавить кандидата</a>
+            </li>
+            <c:if test="<%=isRoot%>">
+                <li class="nav-item">
+                    <a class="nav-link" href="<%=request.getContextPath()%>/cities.do">Города</a>
+                </li>
+            </c:if>
+        </c:if>
         <li class="nav-item">
             <a class="nav-link" href="<c:url value='/auth.do'/>"> <c:out value="<%=value%>"/></a>
         </li>
         <li class="nav-item">
             <a class="nav-link" href="<%=request.getContextPath()%>/reg.do">Зарегистрировать</a>
         </li>
-        <c:if test="<%=isRoot%>">
-            <li class="nav-item">
-                <a class="nav-link" href="<%=request.getContextPath()%>/cities.do">Города</a>
-            </li>
-        </c:if>
     </ul>
 </div>
 </body>
