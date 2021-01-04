@@ -6,30 +6,37 @@ import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class AuthFilter implements Filter {
+    private final AtomicInteger counter = new AtomicInteger(0);
+
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-
     }
 
     @Override
     public void doFilter(ServletRequest sreq, ServletResponse sresp, FilterChain chain) throws IOException, ServletException {
+        System.out.println("auth filter " + counter.incrementAndGet());
         HttpServletRequest req = (HttpServletRequest) sreq;
         HttpServletResponse resp = (HttpServletResponse) sresp;
+        System.out.println("@@@@@@@@@@@@@@@@@");
+        resp.getHeaderNames().forEach(System.out::println);
+        System.out.println("@@@@@@@@@@@@@@@@@");
         String uri = req.getRequestURI();
         if (uri.endsWith("auth.do") || uri.endsWith("reg.do")) {
             chain.doFilter(sreq, sresp);
             return;
         }
         if (uri.contains("cities.do")) {
+            System.out.println("uri.contains(\"cities.do\")");
             User user = (User) req.getSession().getAttribute("user");
-            if (req.getMethod().toString().equals("POST") && !(user.getEmail().equals("root@local") )){
+            System.out.println(user);
+            if (req.getMethod().toString().equals("POST") && !(user.getEmail().equals("root@local"))) {
+                System.out.println("redirect");
                 resp.sendRedirect(req.getContextPath());
-            }else {
-                chain.doFilter(sreq, sresp);
+                return;
             }
-            return;
         }
         if (req.getSession().getAttribute("user") == null) {
             resp.sendRedirect(req.getContextPath() + "/login.jsp");

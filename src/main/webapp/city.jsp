@@ -30,7 +30,7 @@
                 <div><label id="txt"></label></div>
                 <label for="newCity" id="hint"></label>
                 <input type="text" class="form-control" id="newCity"
-                       placeholder="азвание города" onclick="clearText()">
+                       placeholder="Название города" onclick="clearText()">
             </div>
             <button type="button" class="btn btn-primary" onclick="addCity()">Submit</button>
         </form>
@@ -40,16 +40,6 @@
             <div class="card-header">
                 Города
             </div>
-            <script>
-                $cities = $.get({
-                    url: 'http://localhost:8030/dreamjob/cities.do'
-                }).done(function (json) {
-                    return json
-                }).fail(function (err) {
-                    alert(err)
-                    return ''
-                })
-            </script>
             <div class="card-body">
                 <table class="table" id="table">
                     <tbody>

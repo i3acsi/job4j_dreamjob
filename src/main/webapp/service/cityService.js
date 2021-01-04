@@ -13,7 +13,7 @@ function addCity() {
             if (err.status === 400) {
                 $('#txt').text(err.message)
             } else {
-                alert(err)
+                alert('error' + err)
             }
         });
     }

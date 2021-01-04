@@ -45,7 +45,10 @@ public class CityServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        System.out.println("City servlet doPost");
+        resp.getHeaderNames().forEach(System.out::println);
         req.setCharacterEncoding("UTF-8");
+        resp.setContentType("application/json");
         PrintWriter writer = new PrintWriter(new OutputStreamWriter(resp.getOutputStream(), StandardCharsets.UTF_8));
         String id = req.getParameter("id");
         String name = req.getParameter("name");
@@ -56,6 +59,7 @@ public class CityServlet extends HttpServlet {
         } else {
             city = store.save(city);
             if (city.getId() == -1) {
+                System.out.println("error");
                 resp.sendError(400, "Город с таким названием уже существует");
             }
         }
