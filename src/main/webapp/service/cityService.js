@@ -1,11 +1,14 @@
 function addCity() {
     if (validate()) {
-        const newName = $('#newCity').val()
+        const addCityName = $('#newCity').val()
         $.ajax({
             type: 'POST',
             url: 'http://localhost:8030/dreamjob/cities.do',
-            data: {"id": 0, "name": newName},
-            dataType: 'json',
+            xhrFields: {
+                withCredentials: true,
+            },
+            data: {"id": 0, "name": addCityName},
+            dataType: 'application/json',
             err: 'error'
         }).done(function (city) {
             addRow(city.id, city.name)

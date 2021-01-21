@@ -22,6 +22,20 @@
     <title>Работа мечты</title>
 </head>
 <body>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script>
+    function login() {
+        const email = $('#email').val()
+        const password = $('#password').val()
+        $.post({
+            url : 'http://localhost:8030/dreamjob/auth.do',
+            data : {
+                "email" : email,
+                "password" : password
+            }
+        })
+    }
+</script>
 <div class="container pt-3">
 
     <div class="row">
@@ -38,13 +52,13 @@
                 <form action="<%=request.getContextPath()%>/auth.do" method="post">
                     <div class="form-group">
                         <label>Почта</label>
-                        <input type="text" class="form-control" name="email">
+                        <input type="text" class="form-control" name="email" id = "email">
                     </div>
                     <div class="form-group">
                         <label>Пароль</label>
-                        <input type="password" class="form-control" name="password">
+                        <input type="password" class="form-control" name="password" id="password">
                     </div>
-                    <button type="submit" class="btn btn-primary">Войти</button>
+                    <button type="submit" class="btn btn-primary" onclick="login()">Войти</button>
                 </form>
             </div>
         </div>

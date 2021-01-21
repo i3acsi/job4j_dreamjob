@@ -3,8 +3,10 @@ package ru.job4j.dream.filter;
 import ru.job4j.dream.model.User;
 
 import javax.servlet.*;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -20,18 +22,14 @@ public class AuthFilter implements Filter {
         System.out.println("auth filter " + counter.incrementAndGet());
         HttpServletRequest req = (HttpServletRequest) sreq;
         HttpServletResponse resp = (HttpServletResponse) sresp;
-        System.out.println("@@@@@@@@@@@@@@@@@");
-        resp.getHeaderNames().forEach(System.out::println);
-        System.out.println("@@@@@@@@@@@@@@@@@");
         String uri = req.getRequestURI();
+        HttpSession hs = req.getSession();
         if (uri.endsWith("auth.do") || uri.endsWith("reg.do")) {
             chain.doFilter(sreq, sresp);
             return;
         }
         if (uri.contains("cities.do")) {
-            System.out.println("uri.contains(\"cities.do\")");
-            User user = (User) req.getSession().getAttribute("user");
-            System.out.println(user);
+            String token = req.getParameter("token");
             if (req.getMethod().toString().equals("POST") && !(user.getEmail().equals("root@local"))) {
                 System.out.println("redirect");
                 resp.sendRedirect(req.getContextPath());

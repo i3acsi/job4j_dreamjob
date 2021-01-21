@@ -1,13 +1,11 @@
 package ru.job4j.dream.servlet;
 
 import ru.job4j.dream.model.User;
+import ru.job4j.dream.service.AuthenticationService;
 import ru.job4j.dream.store.PsqlStore;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.*;
 import java.io.IOException;
 
 public class AuthServlet extends HttpServlet {
@@ -23,9 +21,10 @@ public class AuthServlet extends HttpServlet {
         String email = req.getParameter("email");
         String password = req.getParameter("password");
         User user = PsqlStore.instOf().findUserByEmail(email);
-        if (user != null && user.getPassword().equals(password)) {
-            sc = req.getSession();
-            sc.setAttribute("user", user);
+        if (user != null && AuthenticationService.checkCredentials(user.getName(), password, user.getPassword())) {
+            HttpSession hs = req.getSession();
+            String token = AuthenticationService.getToken(user.getName(), user.getPassword());
+            hs.setAttribute("token", token);
             resp.sendRedirect(req.getContextPath() + "/posts.do");
         } else {
             req.setAttribute("error", "Не верный email или пароль");
