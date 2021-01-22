@@ -17,13 +17,13 @@ public class AuthServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        HttpSession sc;
         String email = req.getParameter("email");
         String password = req.getParameter("password");
         User user = PsqlStore.instOf().findUserByEmail(email);
-        if (user != null && AuthenticationService.checkCredentials(user.getName(), password, user.getPassword())) {
+        if (user != null && AuthenticationService.checkCredentials(user, password)) {
             HttpSession hs = req.getSession();
-            String token = AuthenticationService.getToken(user.getName(), user.getPassword());
+            String token = AuthenticationService.getToken(user);
+            hs.setAttribute("user", user);
             hs.setAttribute("token", token);
             resp.sendRedirect(req.getContextPath() + "/posts.do");
         } else {

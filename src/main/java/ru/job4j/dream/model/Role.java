@@ -1,16 +1,8 @@
 package ru.job4j.dream.model;
 
-public class Role {
+public enum Role {
+    USER, ADMIN ;
     private int id;
-    private String name;
-
-    public Role(int id, String name) {
-        this.id = id;
-        this.name = name;
-    }
-
-    public Role() {
-    }
 
     public int getId() {
         return id;
@@ -20,11 +12,5 @@ public class Role {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
-    }
 
-    public void setName(String name) {
-        this.name = name;
-    }
 }

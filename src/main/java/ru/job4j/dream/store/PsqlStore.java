@@ -4,10 +4,7 @@ import org.apache.commons.dbcp2.BasicDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.job4j.dream.dto.CandidateDTO;
-import ru.job4j.dream.model.Candidate;
-import ru.job4j.dream.model.City;
-import ru.job4j.dream.model.Post;
-import ru.job4j.dream.model.User;
+import ru.job4j.dream.model.*;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -263,15 +260,17 @@ public class PsqlStore implements Store {
 
     private User create(User user) {
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps = cn.prepareStatement("INSERT INTO user_account(name, email, password) VALUES (?,?,?)",
+             PreparedStatement ps = cn.prepareStatement("INSERT INTO user_account(name, email, password, roleid) VALUES (?,?,?,(SELECT id FROM role WHERE name = ?))",
                      PreparedStatement.RETURN_GENERATED_KEYS)
         ) {
             String name = user.getName();
             String email = user.getEmail();
             String password = user.getPassword();
+            String role = user.getRole().name();
             ps.setString(1, name);
             ps.setString(2, email);
             ps.setString(3, password);
+            ps.setString(4, role);
             ps.execute();
             try (ResultSet id = ps.getGeneratedKeys()) {
                 if (id.next()) {
@@ -286,15 +285,17 @@ public class PsqlStore implements Store {
 
     private User update(User user) {
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps = cn.prepareStatement("UPDATE user_account SET name = ?, email = ?, password = ? WHERE id = ?")
+             PreparedStatement ps = cn.prepareStatement("UPDATE user_account SET name = ?, email = ?, password = ?, roleid = (SELECT id FROM role WHERE name = ?) WHERE id = ?")
         ) {
             String name = user.getName();
             String email = user.getEmail();
             String password = user.getPassword();
+            String role = user.getRole().name();
             ps.setString(1, name);
             ps.setString(2, email);
             ps.setString(3, password);
-            ps.setInt(4, user.getId());
+            ps.setString(4, role);
+            ps.setInt(5, user.getId());
             ps.executeUpdate();
         } catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -306,15 +307,16 @@ public class PsqlStore implements Store {
     public Collection<User> findAllUsers() {
         List<User> users = new ArrayList<>();
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps = cn.prepareStatement("SELECT * FROM user_account")
+             PreparedStatement ps = cn.prepareStatement("SELECT u.id, u.name, u.email, u.password, r.name FROM user_account AS u INNER JOIN role AS r ON roleid = r.id")
         ) {
             try (ResultSet it = ps.executeQuery()) {
                 while (it.next()) {
-                    int id = it.getInt("id");
-                    String name = it.getString("name");
-                    String email = it.getString("email");
-                    String password = it.getString("password");
-                    users.add(new User(id, name, email, password));
+                    int id = it.getInt("u.id");
+                    String name = it.getString("u.name");
+                    String email = it.getString("u.email");
+                    String password = it.getString("u.password");
+                    Role role = Role.valueOf(it.getString("r.name"));
+                    users.add(new User(id, name, email, password, role));
                 }
             }
         } catch (Exception e) {
@@ -327,7 +329,7 @@ public class PsqlStore implements Store {
     public User findUserById(int id) {
         User result = null;
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps = cn.prepareStatement("SELECT name, email, password FROM user_account WHERE id = ?")
+             PreparedStatement ps = cn.prepareStatement("SELECT u.id, u.name, u.email, u.password, r.name FROM user_account AS u INNER JOIN role AS r ON roleid = r.id WHERE id = ?")
         ) {
             ps.setInt(1, id);
             try (ResultSet it = ps.executeQuery()) {
@@ -335,7 +337,8 @@ public class PsqlStore implements Store {
                     String name = it.getString("name");
                     String email = it.getString("email");
                     String password = it.getString("password");
-                    result = new User(id, name, email, password);
+                    Role role = Role.valueOf(it.getString("r.name"));
+                    result = new User(id, name, email, password, role);
                 }
             }
         } catch (Exception e) {
@@ -348,7 +351,7 @@ public class PsqlStore implements Store {
     public User findUserByEmail(String email) {
         User result = null;
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps = cn.prepareStatement("SELECT id, name, password FROM user_account WHERE email = ?")
+             PreparedStatement ps = cn.prepareStatement("SELECT u.id, u.name, u.email, u.password, r.name FROM user_account AS u INNER JOIN role AS r ON roleid = r.id WHERE email = ?")
         ) {
             ps.setString(1, email);
             try (ResultSet it = ps.executeQuery()) {
@@ -356,7 +359,8 @@ public class PsqlStore implements Store {
                     String name = it.getString("name");
                     int id = it.getInt("id");
                     String password = it.getString("password");
-                    result = new User(id, name, email, password);
+                    Role role = Role.valueOf(it.getString("r.name"));
+                    result = new User(id, name, email, password, role);
                 }
             }
         } catch (Exception e) {

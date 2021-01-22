@@ -1,5 +1,6 @@
 package ru.job4j.dream.servlet;
 
+import ru.job4j.dream.model.Role;
 import ru.job4j.dream.model.User;
 import ru.job4j.dream.service.AuthenticationService;
 import ru.job4j.dream.store.PsqlStore;
@@ -20,8 +21,8 @@ public class RegServlet extends HttpServlet {
     public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String name = req.getParameter("name");
         String email = req.getParameter("email");
-        String password = AuthenticationService.encode(name, req.getParameter("password"));
-        User newUser = new User(0, name, email, password, new R);
+        String password = AuthenticationService.encode(email, req.getParameter("password"));
+        User newUser = new User(0, name, email, password, Role.USER);
         PsqlStore.instOf().save(newUser);
         req.getRequestDispatcher("login.jsp").forward(req, resp);
     }

@@ -1,6 +1,7 @@
 function addCity() {
     if (validate()) {
         const addCityName = $('#newCity').val()
+        const token =
         $.ajax({
             type: 'POST',
             url: 'http://localhost:8030/dreamjob/cities.do',

@@ -40,4 +40,4 @@ CREATE TABLE IF NOT EXISTS user_account
     UNIQUE (email)
 );
 
--- INSERT INTO user_account (name, email, password, roleId) VALUES ('admin', 'root@local', 'cm9vdERFRkFVTFRfU0FMVHBhc3N3b3Jk', 2);
+-- INSERT INTO user_account (name, email, password, roleId) VALUES ('admin', 'root@local', 'cm9vdEBsb2NhbERFRkFVTFRfU0FMVHBhc3N3b3Jk', 2);
