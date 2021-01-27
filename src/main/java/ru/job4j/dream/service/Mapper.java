@@ -24,7 +24,7 @@ public class Mapper {
             return OBJECT_MAPPER.readValue(json, cl);
         } catch (JsonProcessingException e) {
             log.error(e.getMessage(), e);
-            return null;
+            throw new RuntimeException("can't parse the json");
         }
     }
 }
