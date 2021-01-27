@@ -1,4 +1,3 @@
-<%@ page import="ru.job4j.dream.model.User" %>
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
@@ -7,7 +6,6 @@
 <head>
     <meta charset="UTF-8" http-equiv="Content-Type" name="viewport"
           content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="token" content="token">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
@@ -18,12 +16,100 @@
 <body>
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <jsp:include page="/nav.jsp"/>
+<script>
+    function validate() {
+        let valid = true
+        let hint = $('#hint')
+        hint.text("")
+        if ($('#newCity').val() === '') {
+            hint.text("Название города не может быть пустым")
+            valid = false
+        }
+        return valid
+    }
+
+    function addCity() {
+        if (validate()){
+            const newName = $('#newCity').val()
+            const token = '${token}'
+            $.ajax({
+                type: 'POST',
+                url: 'http://localhost:8030/dreamjob/cities.do',
+                data: {"id": 0, "name": newName, "token" : token},
+                dataType: 'json'
+            }).done(function (city) {
+                addRow(city.id, city.name)
+            }).fail(function (err) {
+                if (err.status === 400) {
+                    $('#txt').text(err.message)
+                } else {
+                    alert('op')
+                }
+            });
+        }
+    }
+
+    function addRow(id, cityName) {
+        let innerHTML = '<tr id = "row' + id + '"><td>' +
+            '<button  class="btn btn-primary btn-sm" onclick="updateCity(' + id + ', $(\'#newCity\').val())">'
+            + ' <i class="fa fa-edit"></i></button>'
+            + '<button  class="btn btn-primary btn-sm" onclick="removeCity(' + id + ')"> '
+            + '<i class="fa fa-trash"></i></button>'
+            + cityName + '</td></tr>'
+        $('table').find('tbody').append(innerHTML)
+    }
+
+    function updateCity(id, cityName) {
+        if (validate()) {
+            const token = '${token}'
+            $.ajax({
+                type: 'POST',
+                url: 'http://localhost:8030/dreamjob/cities.do',
+                data: {"id": id, "name": cityName, "token" : token},
+                dataType: 'json',
+                err: 'error'
+            }).done(function (city) {
+                removeRow(city.id)
+                addRow(city.id, city.name)
+            }).fail(function (err) {
+                if (err.status === 400) {
+                    $('#txt').text(err.message)
+                } else {
+                    alert('update')
+                }
+            });
+        }
+    }
+
+    function removeCity(id) {
+        const token = '${token}'
+        $.ajax({
+            type: 'POST',
+            url: 'http://localhost:8030/dreamjob/cities.do',
+            data: {
+                "id": id, "name": "name",
+                "remove": true,
+                "token" : token
+            },
+            dataType: 'json',
+        }).done(function (city) {
+            removeRow(city.id)
+        }).fail(function (err) {
+            alert('rem');
+        });
+    }
+
+    function removeRow(id) {
+        let elem = document.getElementById('row' + id)
+        elem.remove()
+    }
+
+</script>
 <script type="text/javascript">
     function clearText() {
         document.getElementById('txt').textContent = ''
     }
 </script>
-<script src="service/cityService.js" type="text/javascript" charset="utf-8"></script>
 <div class="container pt-3">
     <div class="row">
         <form>

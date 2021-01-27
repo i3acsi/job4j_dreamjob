@@ -7,14 +7,12 @@ public class User {
     private String name;
     private String email;
     private String password;
-    private Role role;
 
-    public User(int id, String name, String email, String password, Role role) {
+    public User(int id, String name, String email, String password) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.password = password;
-        this.role = role;
     }
 
     public int getId() {
@@ -47,18 +45,6 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
-    public boolean hasRole (Role role) {
-        return this.role == role;
     }
 
     @Override

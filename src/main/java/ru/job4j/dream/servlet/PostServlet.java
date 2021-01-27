@@ -12,6 +12,11 @@ import java.io.IOException;
 public class PostServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String action = req.getParameter("action");
+        if ("remove".equals(action)) {
+            int id = Integer.parseInt(req.getParameter("id"));
+            PsqlStore.instOf().delete(new Post(id, "rem"));
+        }
         req.setAttribute("posts", PsqlStore.instOf().findAllPosts());
         req.getRequestDispatcher("/post/posts.jsp").forward(req, resp);
     }

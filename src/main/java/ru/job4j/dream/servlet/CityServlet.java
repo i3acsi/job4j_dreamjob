@@ -21,6 +21,8 @@ public class CityServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String token = req.getSession().getAttribute("token").toString();
+        req.setAttribute("token", token);
         if (req.getParameter("edit") != null) {
             req.setAttribute("cities", store.findAllCities());
             String id = req.getParameter("id");
@@ -37,6 +39,7 @@ public class CityServlet extends HttpServlet {
 
             req.getRequestDispatcher("/candidate/edit_candidate.jsp").forward(req, resp);
         } else {
+
             req.setAttribute("cities", store.findAllCities().stream().map(Mapper::objToJson).collect(Collectors.toList()));
             req.getRequestDispatcher("/city.jsp").forward(req, resp);
         }
@@ -45,10 +48,8 @@ public class CityServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        System.out.println("City servlet doPost");
-        resp.getHeaderNames().forEach(System.out::println);
         req.setCharacterEncoding("UTF-8");
-        resp.setContentType("application/json");
+        resp.setContentType("json");
         PrintWriter writer = new PrintWriter(new OutputStreamWriter(resp.getOutputStream(), StandardCharsets.UTF_8));
         String id = req.getParameter("id");
         String name = req.getParameter("name");

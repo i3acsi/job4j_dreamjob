@@ -1,9 +1,7 @@
 package ru.job4j.dream.service;
 
-import ru.job4j.dream.model.Role;
 import ru.job4j.dream.model.User;
 import ru.job4j.dream.store.PsqlStore;
-import ru.job4j.dream.store.Store;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -29,21 +27,15 @@ public class AuthenticationService {
         return Base64.getEncoder().encodeToString((user.getId() + SALT + now.format(FORMATTER)).getBytes());
     }
 
-    public static boolean checkToken(String token, Role role) {
+    public static boolean checkToken(String token, String email) {
         String[] params = new String(Base64.getDecoder().decode(token)).split(SALT);
         LocalDateTime tokenCreationDateTime = LocalDateTime.parse(params[1], FORMATTER);
         LocalDateTime now = LocalDateTime.now();
         long minutesPassed = ChronoUnit.MINUTES.between(tokenCreationDateTime, now);
         User user = PsqlStore.instOf().findUserById(Integer.parseInt(params[0]));
-        if (minutesPassed >= LIFE_TIME_MINUTES)
-            return false;
-        if (role != null && !user.hasRole(role)) {
+        if (user == null || !email.equals(user.getEmail())|| minutesPassed >= LIFE_TIME_MINUTES) {
             return false;
         }
         return true;
-    }
-
-    public static String[] decodeToUserNameAndPwd(String encodedCredentials) {
-        return new String(Base64.getDecoder().decode(encodedCredentials)).split(SALT);
     }
 }

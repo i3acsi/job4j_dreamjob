@@ -19,25 +19,11 @@ CREATE TABLE IF NOT EXISTS candidate
     FOREIGN KEY (cityId) REFERENCES city (id)
 );
 
-CREATE TABLE IF NOT EXISTS role
-(
-    id       SERIAL PRIMARY KEY,
-    name     TEXT,
-    UNIQUE (name)
-);
-
--- INSERT INTO role (name) VALUES ('USER');
--- INSERT INTO role (name) VALUES ('ADMIN');
-
 CREATE TABLE IF NOT EXISTS user_account
 (
     id       SERIAL PRIMARY KEY,
     name     TEXT,
     email    TEXT,
     password TEXT,
-    roleId INT,
-    FOREIGN KEY (roleId) REFERENCES role (id),
     UNIQUE (email)
 );
-
--- INSERT INTO user_account (name, email, password, roleId) VALUES ('admin', 'root@local', 'cm9vdEBsb2NhbERFRkFVTFRfU0FMVHBhc3N3b3Jk', 2);

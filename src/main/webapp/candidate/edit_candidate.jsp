@@ -42,6 +42,7 @@
         candidate = new Candidate(Integer.parseInt(id), name, cityId);
     }
 %>
+
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script>
     function validate() {
@@ -54,20 +55,21 @@
         return result;
     }
     function redirect() {
-        document.location.href = 'http://localhost:8030/dreamjob/candidates.do'
+        document.location.href =  location.origin + '/dreamjob/candidates.do'
     }
     function saveCandidate() {
         let id = <%=candidate.getId()%>;
         let name = $('#name').val();
         let cityId = $('select').find("option:selected").val()
+        const token = '${token}'
         $.post({
             url: 'http://localhost:8030/dreamjob/candidates.do',
             data: {
                 "id": id,
                 "name": name,
-                "cityId": cityId
-            },
-            dataType: 'json'
+                "cityId": cityId,
+                "token" : token
+            }
         }).done(function () {
             redirect()
         }).fail(function () {
